@@ -20,14 +20,8 @@ const Modal = ({ children, onClick }) => {
     }
   }
 
-  function handleBackDropClick({ target, currentTarget }) {
-    if (target === currentTarget) {
-      onClick();
-    }
-  }
-
   return createPortal(
-    <Styled.Backdrop onClick={handleBackDropClick}>
+    <Styled.Backdrop>
       <Styled.StyledModal>{children}</Styled.StyledModal>
     </Styled.Backdrop>,
     modalRoot

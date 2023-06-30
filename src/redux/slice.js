@@ -22,8 +22,6 @@ const carsSlice = createSlice({
         }
       })
       .addCase(addCar.fulfilled, (state, action) => {
-        // const newItem = { ...action.payload, id: state.items.length + 1 };
-        // state.items.push(newItem);
         const maxId = state.items.reduce((max, item) => (item.id > max ? item.id : max), 0);
         const newItem = { ...action.payload, id: maxId + 1 };
         state.items.push(newItem);

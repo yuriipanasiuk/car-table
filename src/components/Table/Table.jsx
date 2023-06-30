@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import Pagination from '@mui/material/Pagination';
+
 import { fetchCars, deleteCar, editCar, addCar } from '../../redux/operations';
 import Modal from '../Modal/Modal';
 import { editValidation } from '../../utils/editValidation';
@@ -101,10 +102,16 @@ const Table = () => {
 
   return (
     <>
-      <input onChange={handleSearch} value={searchValue} />
-      <button type="submit" onClick={() => setShowAddModal(true)}>
-        Add car
-      </button>
+      <Styled.Wraper>
+        <Styled.SearchInput
+          onChange={handleSearch}
+          value={searchValue}
+          placeholder="Please enter a string to search within the table"
+        />
+        <Styled.AddButton type="button" onClick={() => setShowAddModal(true)}>
+          Add car
+        </Styled.AddButton>
+      </Styled.Wraper>
 
       <Styled.Table>
         <Styled.Thead>
@@ -152,6 +159,7 @@ const Table = () => {
       {showDeleteModal && (
         <Modal onClick={handleClick}>
           <Styled.DeleteModal>
+            <Styled.CloseButton size={24} onClick={handleClick} />
             <Styled.TextModal>Are you sure, that you want to perform this action?</Styled.TextModal>
             <div>
               <Styled.ButtonModal onClick={handleDelete}>Yes</Styled.ButtonModal>
@@ -163,6 +171,7 @@ const Table = () => {
       {showUpdateModal && (
         <Modal onClick={handleClick}>
           <Styled.UpdateModal>
+            <Styled.CloseButton size={24} onClick={handleClick} />
             <Styled.ModalTitle>Edit</Styled.ModalTitle>
             <Formik
               onSubmit={handleEdit}
@@ -211,6 +220,7 @@ const Table = () => {
       {showAddModal && (
         <Modal onClick={handleClick}>
           <Styled.UpdateModal>
+            <Styled.CloseButton size={24} onClick={handleClick} />
             <Styled.ModalTitle>Add car</Styled.ModalTitle>
             <Formik
               onSubmit={handleAddSubmit}

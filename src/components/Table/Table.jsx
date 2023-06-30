@@ -41,7 +41,7 @@ const Table = () => {
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    if (!items) {
+    if (items.length === 0) {
       dispatch(fetchCars());
     }
   }, [dispatch, items]);

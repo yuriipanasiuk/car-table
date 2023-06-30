@@ -2,9 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import Pagination from '@mui/material/Pagination';
-import { fetchCars, deleteCar, editCar } from '../../redux/operations';
+import { fetchCars, deleteCar, editCar, addCar } from '../../redux/operations';
 import Modal from '../Modal/Modal';
+import { editValidation } from '../../utils/editValidation';
 import * as Styled from './Table.styled';
+import { addValidation } from '../../utils/addValidation';
 
 const initialValues = {
   car_color: '',
@@ -27,16 +29,15 @@ const Table = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchValue, setSearchValue] = useState('');
 
   const [id, setId] = useState(1);
   const dispatch = useDispatch();
   const items = useSelector(state => state.cars.items);
   const itemsPerPage = 15;
-  const totalPages = Math.ceil(items.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const visibleItems = items.slice(startIndex, endIndex);
 
   useEffect(() => {
     if (!items) {
@@ -75,13 +76,36 @@ const Table = () => {
   };
 
   const handleAddSubmit = (values, { resetForm }) => {
-    console.log(values);
+    dispatch(addCar(values));
     resetForm();
     handleClick();
   };
 
+  const handleSearch = e => {
+    setSearchValue(e.target.value);
+  };
+
+  const filtredContacts = items.filter(
+    item =>
+      item.car.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.car_model.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.car_vin.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.car_color.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.car_model_year.toString().includes(searchValue) ||
+      item.price.includes(searchValue) ||
+      item.availability.toString().includes(searchValue.toLowerCase())
+  );
+
+  const visibleItems = filtredContacts.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filtredContacts.length / itemsPerPage);
+
   return (
     <>
+      <input onChange={handleSearch} value={searchValue} />
+      <button type="submit" onClick={() => setShowAddModal(true)}>
+        Add car
+      </button>
+
       <Styled.Table>
         <Styled.Thead>
           <tr>
@@ -111,9 +135,6 @@ const Table = () => {
                   <option value="edit">Edit</option>
                   <option value="delete">Delete</option>
                 </Styled.Select>
-                <button type="submit" onClick={() => setShowAddModal(true)}>
-                  Add car
-                </button>
               </Styled.TableDataSelector>
             </tr>
           ))}
@@ -143,7 +164,11 @@ const Table = () => {
         <Modal onClick={handleClick}>
           <Styled.UpdateModal>
             <Styled.ModalTitle>Edit</Styled.ModalTitle>
-            <Formik onSubmit={handleEdit} initialValues={initialValues}>
+            <Formik
+              onSubmit={handleEdit}
+              initialValues={initialValues}
+              validationSchema={editValidation}
+            >
               <Styled.Form>
                 <Styled.InputWraper>
                   <p>Company</p>
@@ -165,14 +190,17 @@ const Table = () => {
                 <Styled.InputWraper>
                   <p>Color</p>
                   <Styled.Input type="text" name="car_color" />
+                  <Styled.ErrorMessage component="span" name="car_color" />
                 </Styled.InputWraper>
                 <Styled.InputWraper>
                   <p>Price</p>
                   <Styled.Input type="text" name="price" />
+                  <Styled.ErrorMessage component="span" name="price" />
                 </Styled.InputWraper>
                 <Styled.InputWraper>
                   <p>Availability</p>
                   <Styled.Input type="text" name="availability" />
+                  <Styled.ErrorMessage component="span" name="availability" />
                 </Styled.InputWraper>
                 <Styled.ButtonModal type="submit">Edit</Styled.ButtonModal>
               </Styled.Form>
@@ -184,36 +212,47 @@ const Table = () => {
         <Modal onClick={handleClick}>
           <Styled.UpdateModal>
             <Styled.ModalTitle>Add car</Styled.ModalTitle>
-            <Formik onSubmit={handleAddSubmit} initialValues={initialAddValues}>
+            <Formik
+              onSubmit={handleAddSubmit}
+              initialValues={initialAddValues}
+              validationSchema={addValidation}
+            >
               <Styled.Form>
                 <Styled.InputWraper>
                   <p>Company</p>
                   <Styled.Input type="text" name="car" />
+                  <Styled.ErrorMessage component="span" name="car" />
                 </Styled.InputWraper>
                 <Styled.InputWraper>
                   <p>Model</p>
                   <Styled.Input type="text" name="car_model" />
+                  <Styled.ErrorMessage component="span" name="car_model" />
                 </Styled.InputWraper>
                 <Styled.InputWraper>
                   <p>VIN</p>
                   <Styled.Input type="text" name="car_vin" />
+                  <Styled.ErrorMessage component="span" name="car_vin" />
                 </Styled.InputWraper>
                 <Styled.InputWraper>
                   <p>Year</p>
                   <Styled.Input type="text" name="car_model_year" />
+                  <Styled.ErrorMessage component="span" name="car_model_year" />
                 </Styled.InputWraper>
 
                 <Styled.InputWraper>
                   <p>Color</p>
                   <Styled.Input type="text" name="car_color" />
+                  <Styled.ErrorMessage component="span" name="car_color" />
                 </Styled.InputWraper>
                 <Styled.InputWraper>
                   <p>Price</p>
                   <Styled.Input type="text" name="price" />
+                  <Styled.ErrorMessage component="span" name="price" />
                 </Styled.InputWraper>
                 <Styled.InputWraper>
                   <p>Availability</p>
                   <Styled.Input type="text" name="availability" />
+                  <Styled.ErrorMessage component="span" name="availability" />
                 </Styled.InputWraper>
                 <Styled.ButtonModal type="submit">Add car</Styled.ButtonModal>
               </Styled.Form>

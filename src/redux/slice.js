@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { deleteCar, editCar, fetchCars } from './operations';
+import { addCar, deleteCar, editCar, fetchCars } from './operations';
 
 const carsSlice = createSlice({
   name: 'carsSlice',
@@ -20,6 +20,13 @@ const carsSlice = createSlice({
         if (itemIndex !== -1) {
           state.items[itemIndex] = { ...state.items[itemIndex], ...values };
         }
+      })
+      .addCase(addCar.fulfilled, (state, action) => {
+        // const newItem = { ...action.payload, id: state.items.length + 1 };
+        // state.items.push(newItem);
+        const maxId = state.items.reduce((max, item) => (item.id > max ? item.id : max), 0);
+        const newItem = { ...action.payload, id: maxId + 1 };
+        state.items.push(newItem);
       }),
 });
 

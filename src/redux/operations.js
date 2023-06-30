@@ -27,3 +27,11 @@ export const editCar = createAsyncThunk('cars/edit', (credential, thunkAPI) => {
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+
+export const addCar = createAsyncThunk('cars/add', (credential, thunkAPI) => {
+  try {
+    return credential;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});

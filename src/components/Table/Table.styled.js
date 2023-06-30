@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Field, Form as FormikForm } from 'formik';
+import { Field, Form as FormikForm, ErrorMessage as ErrorFormicError } from 'formik';
 
 export const DeleteModal = styled('div')`
   display: flex;
@@ -76,6 +76,7 @@ export const ModalTitle = styled('p')`
 `;
 
 export const InputWraper = styled('div')`
+  position: relative;
   margin-bottom: 12px;
 `;
 
@@ -116,12 +117,9 @@ export const TableData = styled('td')`
   }
 `;
 
-export const Tbody = styled('tbody')`
-  /* text-align: center; */
-`;
+export const Tbody = styled('tbody')``;
 
 export const Select = styled('select')`
-  margin-right: 12px;
   padding: 5px;
   border: none;
   cursor: pointer;
@@ -136,4 +134,13 @@ export const TableDataSelector = styled('td')`
   &:first-of-type {
     border-left: 1px solid #ddd;
   }
+`;
+
+export const ErrorMessage = styled(ErrorFormicError)`
+  position: absolute;
+  color: red;
+  top: 50px;
+  left: 0px;
+
+  font-size: 12px;
 `;
